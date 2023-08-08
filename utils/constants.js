@@ -1,0 +1,14 @@
+const STATUS_CODES = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST_ERROR: 400,
+  UNAUTHORIZED_ERROR: 401,
+  FORBIDDEN_ERROR: 403,
+  NOT_FOUND_ERROR: 404,
+  BAD_REGISTRATION_ERROR: 409,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
+const URL_PATTERN = /^(https?:\/\/)(w{3}\.)?[\w#\-/._~:?[\]@!$&'()*+,;=]*#?$/;
+
+module.exports = { STATUS_CODES, URL_PATTERN };
