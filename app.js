@@ -8,8 +8,11 @@ const helmet = require('helmet');
 const cors = require('cors');
 const limiter = require('./helpers/rateLimit');
 
+const userRouter = require('./routes/users');
+const movieRouter = require('./routes/movies');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorHandler } = require('./middlewares/errorHandler');
+const { auth } = require('./middlewares/auth');
 
 const { SERVER_PORT, DB_URL } = require('./envconfig');
 
@@ -38,6 +41,9 @@ app.use(
     maxAge: 120,
   }),
 );
+
+app.use('/users', auth, userRouter);
+app.use('/movies', auth, movieRouter);
 
 app.use(errorLogger);
 app.use(errors());

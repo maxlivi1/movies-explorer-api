@@ -7,7 +7,7 @@ const {
 } = process.env;
 
 const DEV_JWT_SECRET = 'U5LX2fdsYGeDbu2VdsO5AIU7a2ffs0M9gN';
-const DEV_DB_HOST = 'mongodb://127.0.0.1:27017/moviesExplorerDB';
+const DEV_DB_HOST = 'mongodb://127.0.0.1:27017/bitfilmsdb';
 const DEV_PORT = 3000;
 
 const DB_URL = NODE_ENV === 'production' && DB_HOST ? DB_HOST : DEV_DB_HOST;
