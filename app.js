@@ -3,13 +3,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { errors, celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
 const limiter = require('./helpers/rateLimit');
 
 const userRouter = require('./routes/users');
 const movieRouter = require('./routes/movies');
+const notFoundPage = require('./controllers/notFoundPage');
+const { signout } = require('./controllers/signout');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { auth } = require('./middlewares/auth');
@@ -42,8 +44,10 @@ app.use(
   }),
 );
 
+app.get('/signout', auth, signout);
 app.use('/users', auth, userRouter);
 app.use('/movies', auth, movieRouter);
+app.use('*', auth, notFoundPage);
 
 app.use(errorLogger);
 app.use(errors());
