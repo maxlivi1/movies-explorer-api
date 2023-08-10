@@ -8,19 +8,18 @@ router.get('/', getSavedMovies);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
-    country: Joi.string().required(),
-    director: Joi.string().required(),
-    name: Joi.string().required(),
+    country: Joi.string().required().trim(),
+    director: Joi.string().required().trim(),
     duration: Joi.number().required(),
-    year: Joi.string().required(),
-    description: Joi.string().required(),
+    year: Joi.string().required().trim(),
+    description: Joi.string().required().trim(),
     image: Joi.string().required().pattern(URL_PATTERN),
     trailerLink: Joi.string().required().pattern(URL_PATTERN),
     thumbnail: Joi.string().required().pattern(URL_PATTERN),
-    owner: Joi.string().required(),
+    owner: Joi.string().required().trim(),
     movieId: Joi.number().required(),
-    nameRU: Joi.string().required(),
-    nameEN: Joi.string().required(),
+    nameRU: Joi.string().required().trim(),
+    nameEN: Joi.string().required().trim(),
   }),
 }), saveMovie);
 

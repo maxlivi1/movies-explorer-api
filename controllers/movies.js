@@ -15,7 +15,6 @@ const saveMovie = (req, res, next) => {
   const {
     country,
     director,
-    name,
     duration,
     year,
     description,
@@ -30,7 +29,6 @@ const saveMovie = (req, res, next) => {
   Movie.create({
     country,
     director,
-    name,
     duration,
     year,
     description,
@@ -46,7 +44,7 @@ const saveMovie = (req, res, next) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         next(
-          new RequestError('Переданы некорректные данные при сохранении фильма')
+          new RequestError('Переданы некорректные данные при сохранении фильма'),
         );
         return;
       }
@@ -63,7 +61,7 @@ const deleteMovie = (req, res, next) => {
     .then((movie) => {
       if (_id !== movie.owner.toString()) {
         next(
-          new ForbiddenError('У вас не достаточно прав для данной операции')
+          new ForbiddenError('У вас не достаточно прав для данной операции'),
         );
         return;
       }

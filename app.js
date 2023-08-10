@@ -10,6 +10,8 @@ const limiter = require('./helpers/rateLimit');
 
 const userRouter = require('./routes/users');
 const movieRouter = require('./routes/movies');
+const registrationRouter = require('./routes/registration');
+const loginRouter = require('./routes/login');
 const notFoundPage = require('./controllers/notFoundPage');
 const { signout } = require('./controllers/signout');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -44,6 +46,8 @@ app.use(
   }),
 );
 
+app.use('/signup', registrationRouter);
+app.use('/signin', loginRouter);
 app.get('/signout', auth, signout);
 app.use('/users', auth, userRouter);
 app.use('/movies', auth, movieRouter);
