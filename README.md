@@ -6,4 +6,4 @@
 
 IP 158.160.110.91
 
-Backend https://api.maxlivi.students.nomoredomains.xyz
+Backend https://api.diploma.maxlivi.ru
