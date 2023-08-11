@@ -8,10 +8,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const limiter = require('./helpers/rateLimit');
 
-const userRouter = require('./routes/users');
-const movieRouter = require('./routes/movies');
-const registrationRouter = require('./routes/registration');
-const loginRouter = require('./routes/login');
+const appRouter = require('./routes');
 const notFoundPage = require('./controllers/notFoundPage');
 const { signout } = require('./controllers/signout');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -40,17 +37,17 @@ app.use(
 
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'https://diploma.maxlivi.ru'],
     credentials: true,
     maxAge: 120,
   }),
 );
 
-app.use('/signup', registrationRouter);
-app.use('/signin', loginRouter);
+app.use('/signup', appRouter.registration);
+app.use('/signin', appRouter.login);
 app.get('/signout', auth, signout);
-app.use('/users', auth, userRouter);
-app.use('/movies', auth, movieRouter);
+app.use('/users', auth, appRouter.users);
+app.use('/movies', auth, appRouter.movies);
 app.use('*', auth, notFoundPage);
 
 app.use(errorLogger);
