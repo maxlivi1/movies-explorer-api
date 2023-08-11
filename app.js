@@ -6,14 +6,10 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
-const limiter = require('./helpers/rateLimit');
-
+const limiter = require('./middlewares/rateLimit');
 const appRouter = require('./routes');
-const notFoundPage = require('./controllers/notFoundPage');
-const { signout } = require('./controllers/signout');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorHandler } = require('./middlewares/errorHandler');
-const { auth } = require('./middlewares/auth');
 
 const { SERVER_PORT, DB_URL } = require('./envconfig');
 
@@ -43,12 +39,7 @@ app.use(
   }),
 );
 
-app.use('/signup', appRouter.registration);
-app.use('/signin', appRouter.login);
-app.get('/signout', auth, signout);
-app.use('/users', auth, appRouter.users);
-app.use('/movies', auth, appRouter.movies);
-app.use('*', auth, notFoundPage);
+app.use(appRouter);
 
 app.use(errorLogger);
 app.use(errors());

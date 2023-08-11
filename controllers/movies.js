@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const getSavedMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => res.send(movies))
     .catch(next);
 };
@@ -66,18 +66,11 @@ const deleteMovie = (req, res, next) => {
         return;
       }
       Movie.deleteOne({ _id: movie._id })
-        .then(() => res.send(movie))
-        .catch((err) => {
-          if (err instanceof mongoose.Error.CastError) {
-            next(new RequestError('Переданы некорректные данные фильма'));
-            return;
-          }
-          next(err);
-        });
+        .then(() => res.send(movie));
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new RequestError('Переданы некорректные данные фильма'));
+        next(new RequestError('Передан невалидный id фильма'));
         return;
       }
       next(err);

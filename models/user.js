@@ -22,6 +22,6 @@ const userSchema = new mongoose.Schema({
     minlength: [2, 'Некорректные данные: Поле должно содержать не менее 2 символов'],
     maxlength: [30, 'Некорректные данные: Поле должно содержать не более 30 символов'],
   },
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('user', userSchema);
