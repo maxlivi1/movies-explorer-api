@@ -42,7 +42,7 @@ const validateMovieBody = celebrate({
     image: Joi.string().required().pattern(URL_PATTERN),
     trailerLink: Joi.string().required().pattern(URL_PATTERN),
     thumbnail: Joi.string().required().pattern(URL_PATTERN),
-    owner: Joi.string().required().trim(),
+    // owner: Joi.string().required().trim(),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required().trim(),
     nameEN: Joi.string().required().trim(),

@@ -14,23 +14,34 @@ const registration = (req, res, next) => {
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, email, password: hash }))
-    .then((user) => res.status(STATUS_CODES.CREATED).send({
-      message: `Пользователь с email: ${user.email} успешно зарегистрирован.`,
-    }))
+    .then((user) => {
+      const token = getJwtToken(user._id);
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: 'none',
+          secure: true,
+        })
+        .status(STATUS_CODES.CREATED)
+        .send({
+          message: `Пользователь с email: ${user.email} успешно зарегистрирован.`,
+        });
+    })
     .catch((err) => {
       if (err.code === 11000) {
         next(
           new RegistrationError(
-            'Пользователь с таким email уже зарегистрирован',
-          ),
+            'Пользователь с таким email уже зарегистрирован'
+          )
         );
         return;
       }
       if (err instanceof mongoose.Error.ValidationError) {
         next(
           new RequestError(
-            'Переданы некорректные данные при создании пользователя',
-          ),
+            'Переданы некорректные данные при создании пользователя'
+          )
         );
         return;
       }
@@ -40,7 +51,8 @@ const registration = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email }).select('+password')
+  User.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) throw new AuthError('Неверно указан логин или пароль');
 
@@ -95,12 +107,20 @@ const getUserInfo = (req, res, next) => {
 const updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, email },
+    { new: true, runValidators: true }
+  )
     .orFail(new NotFoundError('Пользователь по указанному id не найден'))
     .then((user) => res.send({ name: user.name, email: user.email }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new RegistrationError('Пользователь с таким email уже зарегистрирован'));
+        next(
+          new RegistrationError(
+            'Пользователь с таким email уже зарегистрирован'
+          )
+        );
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
@@ -108,7 +128,11 @@ const updateUserInfo = (req, res, next) => {
         return;
       }
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new RequestError('Переданы некорректные данные при обновлении пользователя'));
+        next(
+          new RequestError(
+            'Переданы некорректные данные при обновлении пользователя'
+          )
+        );
         return;
       }
       next(err);
